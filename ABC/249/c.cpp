@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define PI 3.14159265358979323846
+#define MOD 1000000007
+#define mod 998244353
+using ll = long long;
+using vll = vector<ll>;
+using vvll = vector<vll>;  // vvll 変数名(要素数1, vll(要素数2, 初期値))
+
+void YESNO(bool ans) {
+  if (ans) {
+    cout << "YES" << endl;
+  } else {
+    cout << "NO" << endl;
+  }
+}
+
+void YesNo(bool ans) {
+  if (ans) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
+  }
+}
+
+ll new_pow(ll x, ll n) {
+  ll ret = 1;
+  while (0 < n) {
+    if ((n % 2) == 0) {
+      x *= x;
+      n >>= 1;
+    } else {
+      ret *= x;
+      n--;
+    }
+  }
+  return ret;
+}
+
+// Download samples : oj d (URL) (remove "test" : rm -R ./test)
+// Test             : g++ a.cpp -> oj t
+// Submit           : oj s (URL) (File name)
+
+int main() {
+  ll n, k;
+  cin >> n >> k;
+  vvll st(n, vll(26, 0));
+  for (ll i = 0; i < n; i++) {
+    string s;
+    cin >> s;
+    for (ll si = 0; si < s.size(); si++) {
+      ll val = (ll)s.at(si) - 97;
+      // cout << val;
+      st.at(i).at(val)++;
+    }
+    // cout << endl;
+  }
+  ll ans = 0;
+  for (ll bit = 0; bit < (1 << n); bit++) {
+    vll char_num(26, 0);
+    ll ans_c = 0;
+    for (ll i = 0; i < n; i++) {
+      if (bit & (1 << i)) {
+        for (ll ci = 0; ci < 26; ci++) {
+          char_num.at(ci) += st.at(i).at(ci);
+        }
+      }
+    }
+    for (ll ci = 0; ci < 26; ci++) {
+      if (char_num.at(ci) == k) ans_c++;
+    }
+    ans = max(ans, ans_c);
+  }
+  cout << ans << endl;
+}

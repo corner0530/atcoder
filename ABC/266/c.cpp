@@ -1,0 +1,154 @@
+#include <algorithm>  // min, max, swap, sort, reverse, lower bound, upper bound
+#include <bitset>     // bitset
+#include <cctype>     // isupper, islower, isdigit, toupper, tolower
+#include <cmath>
+#include <cstdint>  // int64 t, int* t
+#include <cstdio>   // printf
+#include <deque>    // deque
+#include <iomanip>
+#include <iostream>  // cout, endl, cin
+#include <map>       // map
+#include <queue>     // queue, priority queue
+#include <set>       // set
+#include <stack>     // stack
+#include <string>    // string, to string, stoi
+#include <tuple>     // tuple, make tuple
+#include <typeinfo>
+#include <unordered_map>  // unordered map
+#include <unordered_set>  // unordered set
+#include <utility>        // pair, make pair
+#include <vector>         // vector
+
+// #include <bits/stdc++.h>
+
+using namespace std;
+
+#define PI 3.14159265358979323846
+#define MOD 1000000007
+#define mod 998244353
+#define INF 9223372036854775807   // 2147483647 // int
+#define inf -9223372036854775808  // -2147483648 // int
+using ll = long long;
+using ull = unsigned long long;
+using vll = vector<ll>;
+using vvll = vector<vll>;  // vvll 変数名(要素数1, vll(要素数2, 初期値))
+
+void YESNO(bool ans) {
+  if (ans) {
+    cout << "YES" << endl;
+  } else {
+    cout << "NO" << endl;
+  }
+}
+
+void YesNo(bool ans) {
+  if (ans) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
+  }
+}
+
+ll new_pow(ll x, ll n) {
+  ll ret = 1;
+  while (n) {
+    if ((n % 2) == 0) {
+      x *= x;
+      n >>= 1;
+    } else {
+      ret *= x;
+      n--;
+    }
+  }
+  return ret;
+}
+
+ll pow_mod(ll x, ll n) {
+  ll ret = 1;
+  while (n) {
+    if (n & 1) ret = ret * x % mod;
+    x = x * x % mod;
+    n /= 2;
+  }
+  return ret;
+}
+
+// 二項係数
+ll comb(ll n, ll r) {
+  ll x = 1, y = 1;
+  for (ll i = 0; i < r; i++) x = x * (n - i) % mod;
+  for (ll i = 1; i <= r; i++) y = y * i % mod;
+  return x * pow_mod(y, mod - 2) % mod;
+}
+
+// 素数判定 (O(\sqrt(N)))
+bool is_prime(ll N) {
+  if (N == 1) return false;
+  for (ll i = 2; i * i <= N; ++i) {
+    if (N % i == 0) return false;
+  }
+  return true;
+}
+
+// 最大公約数 (O(log N))
+ll gcd(ll a, ll b) {
+  if (a < b) {
+    return gcd(b, a);
+  }
+  if (b == 0) {
+    return a;
+  } else {
+    return gcd(b, a % b);
+  }
+}
+
+// 最小公倍数 (O(log N))
+ll lcm(ll a, ll b) {
+  ll d = gcd(a, b);
+  return a / d * b;
+}
+
+ll fact_mod(ll n) {
+  ll sum = 1;
+  for (ll i = 1; i <= n; i++) {
+    sum = (sum * i) % mod;
+  }
+  return sum;
+}
+
+bool isInside(ll ax, ll ay, ll bx, ll by, ll cx, ll cy, ll tx, ll ty) {
+  bool ret = false;
+  ll abXat, bcXbt, caXct;
+
+  abXat = (bx - ax) * (ty - ay) - (by - ay) * (tx - ax);
+  bcXbt = (cx - bx) * (ty - by) - (cy - by) * (tx - bx);
+  caXct = (ax - cx) * (ty - cy) - (ay - cy) * (tx - cx);
+
+  if ((abXat > 0 && bcXbt > 0 && caXct > 0) ||
+      (abXat < 0 && bcXbt < 0 && caXct < 0)) {
+    ret = true;
+  } else if (abXat * bcXbt * caXct == 0) {
+    ret = false;
+  }
+  return ret;
+}
+
+bool isConcave(ll px[], ll py[]) {
+  bool ret = false;
+  for (ll i = 0; i < 4; i++) {
+    if (isInside(px[i % 4], py[i % 4], px[(i + 1) % 4], py[(i + 1) % 4],
+                 px[(i + 2) % 4], py[(i + 2) % 4], px[(i + 3) % 4],
+                 py[(i + 3) % 4])) {
+      ret = true;
+    }
+  }
+
+  return ret;
+}
+
+int main() {
+  ll ax, ay, bx, by, cx, cy, dx, dy;
+  cin >> ax >> ay >> bx >> by >> cx >> cy >> dx >> dy;
+  ll px[4] = {ax, bx, cx, dx}, py[4] = {ay, by, cy, dy};
+  YesNo(!isConcave(px, py));
+}
